@@ -2,19 +2,18 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import QuestionCard from "../components/QuestionCard";
 
-const Result = () => {
-  const navigate = useNavigate();
-  const result = JSON.parse(sessionStorage.getItem("quizResult"));
-  const [showAnswers, setShowAnswers] = useState(false);
+        const Result = () => {
+      const navigate = useNavigate();
+      const result = JSON.parse(sessionStorage.getItem("quizResult"));
+      const [showAnswers, setShowAnswers] = useState(false);
 
-  // If no result is found
-  if (!result) {
-    return (
-      <div className="container mx-auto p-4 text-center">
-        <p className="text-lg">No result found. Please take the quiz first.</p>
-        <button
-          onClick={() => navigate("/")}
-          className="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg shadow"
+          if (!result) {
+         return (
+        <div className="container mx-auto p-4 text-center">
+       <p className="text-lg">No result found. Please take the quiz first.</p>
+          <button
+            onClick={() => navigate("/")}
+         className="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg shadow"
         >
           Go to Quiz
         </button>
@@ -22,32 +21,30 @@ const Result = () => {
     );
   }
 
-  // Calculate score
-  const correctCount = result.score;
-  const total = result.totalQuestions;
-  const percentage = Math.round((correctCount / total) * 100);
+          const correctCount = result.score;
+            const total = result.totalQuestions;
+            const percentage = Math.round((correctCount / total) * 100);
 
-  // Toggle review answers
-  const toggleReview = () => {
+      const toggleReview = () => {
     setShowAnswers(!showAnswers);
   };
 
-  return (
-    <div className="container mx-auto p-4">
+       return (
+       <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-4 text-center">Quiz Result</h1>
 
-      <div className="text-center mb-6">
+          <div className="text-center mb-6">
         <p className="text-xl">
           Score: <span className="font-semibold">{correctCount} / {total}</span>
         </p>
-        <p className="text-lg mt-2">
+           <p className="text-lg mt-2">
           Percentage: <span className="font-semibold">{percentage}%</span>
         </p>
 
-        <div className="mt-4 flex justify-center gap-4">
+             <div className="mt-4 flex justify-center gap-4">
           <button
             onClick={toggleReview}
-            className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg shadow"
+         className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg shadow"
           >
             {showAnswers ? "Hide Review" : "Show Review"}
           </button>
@@ -61,18 +58,24 @@ const Result = () => {
         </div>
       </div>
 
-      {/* Show detailed answers if toggled */}
       {showAnswers && (
-        <div className="mt-6">
+        <div className="mt-6 space-y-6">
           {result.review.map((r, idx) => (
-            <QuestionCard
-              key={r.questionId}
-              question={{ ...r, correctAnswer: r.correctAnswer }}
-              index={idx}
-              userAnswer={r.userAnswer}
-              onSelectOption={null} // Disable selection on result
-              showCorrect={true}    // Highlight correct/incorrect answers
-            />
+            <div key={r.questionId}>
+              <QuestionCard
+            question={{ ...r, correctAnswer: r.correctAnswer }}
+                index={idx}
+             userAnswer={r.userAnswer}
+                onSelectOption={null} 
+               showCorrect={true}
+              />
+              
+           {!r.isCorrect && r.explanation && (
+                <p className="mt-2 text-gray-700 pl-4 border-l-4 border-red-400">
+              💡 Explanation: {r.explanation}
+                </p>
+              )}
+            </div>
           ))}
         </div>
       )}
