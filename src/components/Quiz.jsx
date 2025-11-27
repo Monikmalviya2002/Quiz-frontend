@@ -4,7 +4,7 @@ import QuestionCard from './QuestionCard';
 import Timer from './Timer';
 import axios from 'axios';
 
-const BACKEND_URL = 'http://localhost:7777'; // Backend running on port 7777
+
 
 const Quiz = () => {
     const [questions, setQuestions] = useState([]);
@@ -15,16 +15,16 @@ const Quiz = () => {
     useEffect(() => {
         const loadQuestions = async () => {
             try {
-                const res = await axios.get(`${BACKEND_URL}/api/questions`);
+                const res = await axios.get("http://localhost:7777/api/questions");
                 console.log("Fetched questions:", res.data);
 
-                // Ensure it's an array
+                
                 const questionsArray = Array.isArray(res.data) ? res.data : [];
                 setQuestions(questionsArray);
                 setUserAnswers(Array(questionsArray.length).fill(null));
             } catch (error) {
                 console.error('Failed to fetch questions:', error);
-                setQuestions([]); // fallback to empty array
+                setQuestions([]); 
                 setUserAnswers([]);
             } finally {
                 setLoading(false);
@@ -43,7 +43,7 @@ const Quiz = () => {
 
     const handleSubmitQuiz = useCallback(async () => {
         try {
-            const res = await axios.post(`${BACKEND_URL}/api/submit`, { answers: userAnswers });
+            const res = await axios.post("http://localhost:7777/api/submit", { answers: userAnswers });
             sessionStorage.setItem('quizResult', JSON.stringify(res.data));
             navigate('/result');
         } catch (error) {

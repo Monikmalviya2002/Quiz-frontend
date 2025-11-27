@@ -7,6 +7,7 @@ const Result = () => {
   const result = JSON.parse(sessionStorage.getItem("quizResult"));
   const [showAnswers, setShowAnswers] = useState(false);
 
+  // If no result is found
   if (!result) {
     return (
       <div className="container mx-auto p-4 text-center">
@@ -21,23 +22,36 @@ const Result = () => {
     );
   }
 
+  // Calculate score
   const correctCount = result.score;
   const total = result.totalQuestions;
   const percentage = Math.round((correctCount / total) * 100);
 
+  // Toggle review answers
+  const toggleReview = () => {
+    setShowAnswers(!showAnswers);
+  };
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-4 text-center">Quiz Result</h1>
+
       <div className="text-center mb-6">
-        <p className="text-xl">Score: <span className="font-semibold">{correctCount} / {total}</span></p>
-        <p className="text-lg mt-2">Percentage: <span className="font-semibold">{percentage}%</span></p>
+        <p className="text-xl">
+          Score: <span className="font-semibold">{correctCount} / {total}</span>
+        </p>
+        <p className="text-lg mt-2">
+          Percentage: <span className="font-semibold">{percentage}%</span>
+        </p>
+
         <div className="mt-4 flex justify-center gap-4">
           <button
-            onClick={() => setShowAnswers(!showAnswers)}
+            onClick={toggleReview}
             className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg shadow"
           >
             {showAnswers ? "Hide Review" : "Show Review"}
           </button>
+
           <button
             onClick={() => navigate("/")}
             className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow"
@@ -47,16 +61,17 @@ const Result = () => {
         </div>
       </div>
 
+      {/* Show detailed answers if toggled */}
       {showAnswers && (
-        <div>
+        <div className="mt-6">
           {result.review.map((r, idx) => (
             <QuestionCard
               key={r.questionId}
               question={{ ...r, correctAnswer: r.correctAnswer }}
               index={idx}
               userAnswer={r.userAnswer}
-              onSelectOption={null}
-              showCorrect={true}
+              onSelectOption={null} // Disable selection on result
+              showCorrect={true}    // Highlight correct/incorrect answers
             />
           ))}
         </div>
